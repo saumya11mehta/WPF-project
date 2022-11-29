@@ -75,7 +75,7 @@ async function updateRestaurantById(data,id)
 async function deleteRestaurantById(id)
 {
   try{
-    let result = await Restaurant.deleteOne(id);
+    let result = await Restaurant.findByIdAndDelete(id);
     return "Deleted restaurant successfully";
   }
   catch(err){
