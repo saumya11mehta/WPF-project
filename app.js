@@ -10,9 +10,9 @@ var database = require('./config/database');
 
 app.engine('.hbs', exphbs.engine({ extname: '.hbs' ,runtimeOptions: {allowProtoPropertiesByDefault: true,allowProtoMethodsByDefault: true,}}));
 
+
 // pull information from HTML POST (express4)
- 
-var port     = process.env.PORT || 8000;
+var port = process.env.PORT || 8000;
 app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
@@ -163,6 +163,10 @@ app.delete('/api/restaurants/:id',async function(req, res) {
 
 
 
+db.initialize(database.url).then(()=>{
+	app.listen(port);
+	console.log("App listening on port : " + port);
+}).catch((err)=>{
+	console.log("A error has been occurred while connecting to database."); 
+})
 
-app.listen(port);
-console.log("App listening on port : " + port);

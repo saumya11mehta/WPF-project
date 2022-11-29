@@ -8,15 +8,15 @@ var Restaurant = require('./models/restaurant');
 // Replace the uri string with your connection string.
 const uri = database.url;
 
-mongoose.connect(database.url)
-  .then(() => {
-    console.log("Connected to database from mod.js");
-  }).catch(err=> console.log(err));
+// mongoose.connect(database.url)
+//   .then(() => {
+//     console.log("Connected to database from mod.js");
+//   }).catch(err=> console.log(err));
 
-function initialize()
+async function initialize(url)
 {
   // Database connection
-  mongoose.connect(database.url)
+  await mongoose.connect(url)
   .then(() => {
     console.log("Connected to database from mod.js");
   }).catch(err=> console.log(err));
