@@ -1,5 +1,6 @@
 var express  = require('express');
 var path = require('path');
+const { body, query, validationResult } = require('express-validator')
 var mongoose = require('mongoose');
 var exphbs = require('express-handlebars');
 var app      = express();
@@ -21,14 +22,26 @@ app.use(express.static(path.join(__dirname, 'public')));
  
 app.set('view engine', 'hbs');
 
-app.get('/api/restaurants', async function(req, res) {
-	let page = req.query.page;
-	let perPage = req.query.perPage;
-    let borough = req.query.borough;
+app.get('/api/restaurants',[
+	query('borough').optional().isString().withMessage('Only letters and digits allowed in borough.'),
+	query('page').exists(),
+	query('perPage').exists(),
+], async function(req, res) {
+	const errors = validationResult(req);
+	if (errors.isEmpty()) {
+		let page = req.query.page;
+		let perPage = req.query.perPage;
+		let borough = req.query.borough;
 
-    let restaurants = await db.getAllRestaurants(page,perPage,borough)
-	console.log(await restaurants)
-	res.json(await restaurants);
+		let restaurants = await db.getAllRestaurants(page,perPage,borough)
+		console.log(await restaurants)
+		res.json(await restaurants);
+	}else{
+		res.status(400).json({
+			success: false,
+			errors: errors.array()
+		});
+	}
 });
 
 app.get('/restaurants', async function(req, res) {
