@@ -1,0 +1,27 @@
+<h1>List of Restaurants</h1>
+<table id="restaurants">
+    <tr>
+        <th>Restaurant Id</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Borough</th>
+        <th>Cuisine</th>
+        <th>Grades</th>
+    </tr>
+        {{#each restaurants}}
+        <tr>
+            <td>{{this.restaurant_id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.address.building}},<br/>{{this.address.street}},<br/>{{this.address.zipcode}}</td>
+            <td>{{this.borough}}</td>
+            <td>{{this.cuisine}}</td>
+            <td>
+                <ul>
+                {{#each this.grades}}
+                    <li>{{this.grade}}:{{this.score}}</li>
+                {{/each}}
+                </ul>
+            </td>
+        </tr>
+        {{/each}}
+</table>

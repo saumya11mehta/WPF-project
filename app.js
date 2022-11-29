@@ -1,4 +1,5 @@
 var express  = require('express');
+var path = require('path');
 var mongoose = require('mongoose');
 var exphbs = require('express-handlebars');
 var app      = express();
@@ -14,6 +15,9 @@ var port     = process.env.PORT || 8000;
 app.use(bodyParser.urlencoded({'extended':'true'}));            // parse application/x-www-form-urlencoded
 app.use(bodyParser.json());                                     // parse application/json
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
+
+//Sets the static resource directory to public
+app.use(express.static(path.join(__dirname, 'public')));
  
 app.set('view engine', 'hbs');
 
@@ -25,6 +29,22 @@ app.get('/api/restaurants', async function(req, res) {
     let restaurants = await db.getAllRestaurants(page,perPage,borough)
 	console.log(await restaurants)
 	res.json(await restaurants);
+});
+
+app.get('/restaurants', async function(req, res) {
+	res.render('restaurants',{ title: 'Search Restaurants'});
+});
+
+
+app.post('/restaurants', async function(req, res) {
+	let page = req.body.page;
+	let perPage = req.body.perPage;
+    let borough = req.body.borough;
+
+    let restaurants = await db.getAllRestaurants(page,perPage,borough)
+	console.log(await restaurants)
+	// res.json(await restaurants);
+	res.render('search-results',{ title:'Results',restaurants: JSON.parse(JSON.stringify(await restaurants)) });
 });
 
 app.get('/api/restaurants/:id', async function(req, res) {

@@ -32,11 +32,11 @@ async function addNewRestaurant(data){
   }
 }
 
-async function getAllRestaurants(page = 1, perPage = 5, borough)
+async function getAllRestaurants(page, perPage, borough)
 {
   try {
     let skip = perPage * (page-1);
-    if(typeof(borough) != "undefined"){
+    if(typeof(borough) != "undefined" && borough!=""){
       data = {borough:borough};
     }else{
       data = {};
