@@ -5836,3 +5836,13 @@ node_modules/mongoose-int32/LICENSE
 node_modules/mongoose-int32/package.json
 node_modules/mongoose-int32/README.md
 node_modules/mongoose-int32/test/examples.test.js
+node_modules/@mongoosejs/double/.travis.yml
+node_modules/@mongoosejs/double/examples.md
+node_modules/@mongoosejs/double/HEADER.md
+node_modules/@mongoosejs/double/History.md
+node_modules/@mongoosejs/double/index.js
+node_modules/@mongoosejs/double/LICENSE
+node_modules/@mongoosejs/double/Makefile
+node_modules/@mongoosejs/double/package.json
+node_modules/@mongoosejs/double/README.md
+node_modules/@mongoosejs/double/lib/index.js
