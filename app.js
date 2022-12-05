@@ -7,6 +7,9 @@ var app      = express();
 var bodyParser = require('body-parser');   
 var db = require('./mod');
 var database = require('./config/database');
+require('dotenv').config()
+const jwt=require('jsonwebtoken');
+
 
 app.engine('.hbs', exphbs.engine({ extname: '.hbs' ,runtimeOptions: {allowProtoPropertiesByDefault: true,allowProtoMethodsByDefault: true,}}));
 
@@ -22,7 +25,45 @@ app.use(express.static(path.join(__dirname, 'public')));
  
 app.set('view engine', 'hbs');
 
-app.get('/api/restaurants',[
+app.post('/api/login', (req,res)=>{
+	console.log(req)
+	//Authenticated User
+	const userid = req.body.userid;
+	const password = req.body.password;
+
+	if(userid == process.env.USERID){
+		if(password == process.env.PASSWORD){
+			const user = { name : userid }
+			const accessToken = jwt.sign(user, process.env.SECRETKEY)
+			res.json({ accessToken : accessToken})
+		}else{
+			res.send('Authentication failed')
+		}
+	}else{
+		res.send('Invalid User ID')
+	}
+})
+
+function verifyToken(req,res,next){
+	const bearerHeadr = req.headers['authorization']
+	if(typeof bearerHeadr != 'undefined'){
+		const bearer = bearerHeadr.split(' ')
+		const bearerToken = bearer[1]
+		req.token = bearerToken
+		jwt.verify(req.token, process.env.SECRETKEY, (err, decoded)=> {
+			if (err){
+				res.sendStatus(403)
+			}else{
+				console.log(decoded);
+				next()
+			}
+		});
+	}else{
+		res.send('Authentication failed');
+	}
+}	
+
+app.get('/api/restaurants',verifyToken,[
 	query('borough').optional().isString().withMessage('Only letters and digits allowed in borough.'),
 	query('page').exists(),
 	query('perPage').exists(),
@@ -60,7 +101,7 @@ app.post('/restaurants', async function(req, res) {
 	res.render('search-results',{ title:'Results',restaurants: JSON.parse(JSON.stringify(await restaurants)) });
 });
 
-app.get('/api/restaurants/:id', async function(req, res) {
+app.get('/api/restaurants/:id',verifyToken, async function(req, res) {
 	let id = req.params.id;
 	//test id 5eb3d668b31de5d588f4292a
     let restaurant = await db.getRestaurantById(id);
@@ -68,7 +109,7 @@ app.get('/api/restaurants/:id', async function(req, res) {
 	res.json(await restaurant);
 });
 
-app.post('/api/restaurants', async function(req, res) {
+app.post('/api/restaurants',verifyToken, async function(req, res) {
 	let building = req.body.building;
 	let street = req.body.street;
 	let zipcode = req.body.zipcode;
@@ -89,7 +130,7 @@ app.post('/api/restaurants', async function(req, res) {
 	res.send(await restaurants);
 });
 
-app.put('/api/restaurants/:id',async function(req, res) {
+app.put('/api/restaurants/:id',verifyToken,async function(req, res) {
 	let id = req.params.id;
 
 	let building = req.body.building;
@@ -137,7 +178,7 @@ app.put('/api/restaurants/:id',async function(req, res) {
 		}
 
 		let data = {...nameObj,...addressObj,...boroughObj,...cuisineObj,...resIdObj}
-		let restaurants = await db.updateRestaurantById(data,id)
+		let restaurants = await db.updateRestaurantById(data,id);
 		console.log(await restaurants);
 		res.send(await restaurants);
 	}else{
@@ -145,13 +186,11 @@ app.put('/api/restaurants/:id',async function(req, res) {
 	}
 });
 
-app.delete('/api/restaurants/:id',async function(req, res) {
+app.delete('/api/restaurants/:id',verifyToken,async function(req, res) {
 	let id = req.params.id;
 
 	
 	if(typeof(id) != "undefined" && id != ""){
-		
-
 		let restaurants = await db.deleteRestaurantById(id)
 		console.log(await restaurants);
 		res.send(await restaurants);
