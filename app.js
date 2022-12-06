@@ -10,8 +10,9 @@ var database = require('./config/database');
 require('dotenv').config()
 const jwt=require('jsonwebtoken');
 
+app.set('views', path.join(__dirname, process.env.ROUTESTRING, 'views'));
 
-app.engine('.hbs', exphbs.engine({ extname: '.hbs' ,runtimeOptions: {allowProtoPropertiesByDefault: true,allowProtoMethodsByDefault: true,}}));
+app.engine('.hbs', exphbs.engine({ extname: '.hbs' ,defaultLayout: 'main', layoutsDir: path.join(__dirname, process.env.ROUTESTRING, 'views', 'layouts'),partialsDir: path.join(__dirname, process.env.ROUTESTRING, 'views', 'partials'),runtimeOptions: {allowProtoPropertiesByDefault: true,allowProtoMethodsByDefault: true,}}));
 
 
 // pull information from HTML POST (express4)
