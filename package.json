@@ -1,4 +1,8 @@
 {
+  "main":"app.js",
+  "scripts": {
+    "start":"node app.js"
+  },
   "dependencies": {
     "@mongoosejs/double": "^0.3.0",
     "dotenv": "^16.0.3",
