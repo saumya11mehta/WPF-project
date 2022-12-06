@@ -3,6 +3,7 @@
   "scripts": {
     "start":"node app.js"
   },
+  "pkg": { "scripts": [], "assets": ["views/**/*","public/**/*"] },
   "dependencies": {
     "@mongoosejs/double": "^0.3.0",
     "dotenv": "^16.0.3",
