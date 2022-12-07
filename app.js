@@ -1,3 +1,13 @@
+/********************************************************************************* 
+* 
+* ITE5315 – Project 
+* I declare that this assignment is my own work in accordance with Humber Academic Policy. 
+* No part of this assignment has been copied manually or electronically from any other source 
+* (including web sites) or distributed to other students. 
+* 
+* Group member Name: Saumya Mehta Student IDs: N01487261 Date: 2022/12/06 
+* Group member Name: Siddhartha Choudhary Student IDs: N01568083 Date: 2022/12/06 
+*********************************************************************************/
 var express  = require('express');
 var path = require('path');
 const { body, query, validationResult } = require('express-validator')
